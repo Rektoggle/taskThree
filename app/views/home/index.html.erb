@@ -1,0 +1,17 @@
+<div class="text-center mt-20">
+  <h1 class="text-4xl font-bold mb-6">Bienvenido a TaskManager</h1>
+  <p class="mb-4 text-lg">Gestiona tus tareas y subtareas fácilmente.</p>
+  <%= link_to "Ir al creador de tareas", tasks_path, class: "bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded" %>
+</div>
+
+<h2 class="text-xl font-bold mb-4">Tareas principales</h2>
+<ul>
+
+  <% Task.where(parent_id: nil).each do |task| %>
+    <li>
+      <%= link_to task.title, task_by_title_path(title: task.title.parameterize), class: "text-blue-500 hover:underline" %>
+    </li>
+  <% end %>
+
+</ul>
+

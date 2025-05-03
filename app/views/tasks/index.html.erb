@@ -1,0 +1,65 @@
+<h1 class="text-2xl font-bold mb-4">Crear nueva tarea</h1>
+
+<%= form_with model: @task, local: true do |form| %>
+  <div class="mb-4">
+    <%= form.label :title, "Título", class: "block font-semibold mb-1" %>
+    <%= form.text_field :title, class: "border rounded p-2 w-full" %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :description, "Descripción", class: "block font-semibold mb-1" %>
+    <%= form.text_area :description, class: "border rounded p-2 w-full" %>
+  </div>
+
+  <div class="mt-4">
+    <%= form.button "➕ Crear tarea", type: :submit, class: "bg-blue-500 text-white px-4 py-2 rounded" %>
+  </div>
+<% end %>
+
+
+<hr class="my-6">
+
+<h2 class="text-xl font-semibold mb-2">Tareas</h2>
+
+<ul>
+  <% @tasks.each do |task| %>
+    <li class="mb-4">
+        <div class="flex justify-between items-center">
+        <div>
+            <strong><%= task.title %></strong>: <%= task.description %>
+        </div>
+        <div class="flex gap-2">
+        <%= link_to "✏️ Editar", edit_task_path(task), class: "bg-yellow-500 text-white px-2 py-1 rounded" %>
+        <%= button_to "🗑️ Eliminar", task_path(task), method: :delete, data: { turbo_confirm: "¿Estás seguro?" }, class: "bg-red-500 text-white px-2 py-1 rounded" %>
+    </div>
+
+        </div>
+
+      <!-- creador Subtareas -->
+        <ul class="ml-6 mt-2">
+        <% task.subtasks.each do |sub| %>
+          <li class="flex justify-between items-center">
+            <span>↳ <strong><%= sub.title %></strong>: <%= sub.description %></span>
+            <%= link_to "✏️ Editar", edit_task_path(sub), class: "bg-yellow-400 text-white px-2 py-1 rounded" %>
+            <%= button_to "🗑️ Eliminar", task_path(sub), method: :delete, data: { turbo_confirm: "¿Eliminar esta subtarea?" }, class: "bg-red-400 text-white px-2 py-1 rounded ml-4" %>
+          </li>
+        <% end %>
+      </ul>
+      
+
+      <!-- Formulario para subtarea -->
+
+      <%= form_with model: Task.new, local: true do |form| %>
+        
+        <%= form.hidden_field :parent_id, value: task.id %>
+
+        <div class="mt-2">
+          <%= form.text_field :title, placeholder: "Subtarea", class: "border rounded p-1 w-1/3" %>
+          <%= form.text_field :description, placeholder: "Descripción", class: "border rounded p-1 w-1/3" %>
+          <%= form.submit "Agregar subtarea", class: "bg-blue-500 text-white px-2 py-1 rounded" %>
+        </div>
+
+      <% end %>
+    </li>
+  <% end %>
+</ul>
