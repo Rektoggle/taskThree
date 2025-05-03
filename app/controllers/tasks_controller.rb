@@ -1,6 +1,11 @@
 class TasksController < ApplicationController
     before_action :set_task, only: %i[show edit update destroy]
-  
+ 
+    def index
+      @tasks = Task.all
+    end
+
+
     def show
       @task = Task.find_by(slug: params[:slug])
       if @task.nil?
@@ -9,13 +14,6 @@ class TasksController < ApplicationController
         @subtasks = @task.subtasks
         @subtask = Task.new  # Formulario para nueva subtarea
       end
-    end
-    
-    
-
-    def index
-      @task = Task.new
-      @tasks = Task.where(parent_id: nil) # Solo tareas principales
     end
 
     def show_by_title
@@ -35,10 +33,9 @@ class TasksController < ApplicationController
     def create
       @task = Task.new(task_params)
       if @task.save
-        redirect_to tasks_path, notice: "Tarea creada correctamente."
+        redirect_to task_path(@task.slug), notice: "Tarea creada con éxito."
       else
-        @tasks = Task.where(parent_id: nil)
-        render :index, status: :unprocessable_entity
+        render :index
       end
     end
   
