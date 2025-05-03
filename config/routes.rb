@@ -5,8 +5,7 @@ Rails.application.routes.draw do
   get '/tasks/title/:title', to: 'tasks#show_by_title', as: :task_by_title
 
   # Las rutas REST normales
-  resources :tasks do
-    # Define la ruta anidada para subtareas dentro de una tarea principal
+  resources :tasks, param: :slug do
     resources :subtasks, only: [:create]
-  end
+  end  
 end

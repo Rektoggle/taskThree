@@ -1,39 +1,22 @@
-<h1 class="text-2xl font-bold mb-4"><%= @task.title %></h1>
-<p class="mb-4"><%= @task.description %></p>
+<%= form_with model: @subtask, url: task_subtasks_path(@task), local: true do |form| %>
+  <%= form.hidden_field :parent_id, value: @task.id %>
+  <%= form.text_field :title, placeholder: "Subtarea", class: "border rounded p-1 w-1/3" %>
+  <%= form.text_area :description, placeholder: "Descripción", class: "border rounded p-1 w-1/3" %>
+  <%= form.submit "Agregar subtarea", class: "bg-blue-500 text-white px-2 py-1 rounded" %>
+<% end %>
 
-<h2 class="text-xl font-semibold mb-2">Subtareas</h2>
+<h2 class="text-xl font-semibold mt-4">Subtareas</h2>
 <ul>
-  <% @task.subtasks.each do |sub| %>
-    <li>↳ <strong><%= sub.title %></strong>: <%= sub.description %></li>
+  <% @task.subtasks.each do |subtask| %>
+    <li>
+      <strong><%= subtask.title %></strong>: <%= subtask.description %>
+      
+      <!-- Formulario para crear subtarea dentro de una subtarea -->
+      <%= form_with model: @subtask, url: task_subtasks_path(@task), local: true do |form| %>
+        <%= form.text_field :title, placeholder: "Subtarea", class: "border rounded p-1 w-1/3" %>
+        <%= form.text_area :description, placeholder: "Descripción", class: "border rounded p-1 w-1/3" %>
+        <%= form.submit "Agregar subtarea", class: "bg-blue-500 text-white px-2 py-1 rounded" %>
+      <% end %>      
+    </li>
   <% end %>
 </ul>
-
-<!-- Formulario para agregar subtarea -->
-<%= form_with model: @subtask, url: task_subtasks_path(@task), local: true do |form| %>
-    <%= form.hidden_field :parent_id, value: @task.id %>
-    <%= form.text_field :title, placeholder: "Subtarea", class: "border rounded p-1 w-1/3" %>
-    <%= form.text_area :description, placeholder: "Descripción", class: "border rounded p-1 w-1/3" %>
-    <%= form.submit "Agregar subtarea", class: "bg-blue-500 text-white px-2 py-1 rounded" %>
-  <% end %>
-
-  <h2 class="text-xl font-semibold mt-4">Subtareas</h2>
-  <ul>
-    <% @subtasks.each do |subtask| %>
-      <li>
-        <strong><%= subtask.title %></strong>: <%= subtask.description %>
-        
-        <!-- Formulario para crear una subtarea dentro de esta subtarea -->
-        <%= form_with model: Task.new, url: task_subtasks_path(subtask), local: true do |form| %>
-          <%= form.hidden_field :parent_id, value: subtask.id %>
-          <%= form.text_field :title, placeholder: "Subtarea de subtarea", class: "border rounded p-1 w-1/3" %>
-          <%= form.text_area :description, placeholder: "Descripción", class: "border rounded p-1 w-1/3" %>
-          <%= form.submit "Agregar subtarea", class: "bg-blue-500 text-white px-2 py-1 rounded" %>
-        <% end %>
-      </li>
-    <% end %>
-  </ul>
-  
-
-  
-  
-  
